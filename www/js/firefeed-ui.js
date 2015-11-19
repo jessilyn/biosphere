@@ -8,7 +8,8 @@ function FirefeedUI() {
   this._limit = 141;
   this._loggedIn = false;
   this._spinner = new Spinner();
-  this._firefeed = new Firefeed("https://firefeed.firebaseio.com/");
+  //this._firefeed = new Firefeed("https://firefeed.firebaseio.com/");
+  this._firefeed = new Firefeed("https://luminous-fire-3368.firebaseio.com/");
   this._unload = null;
 
   // Setup page navigation.
