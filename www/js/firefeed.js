@@ -412,7 +412,7 @@ Firefeed.prototype.follow = function(user, onComplete) {
  * @param    {string}    content     The content of the spark in text form.
  * @param    {Function}  onComplete  The callback to call when the post is done.
  */
-Firefeed.prototype.post = function(content, onComplete) {
+Firefeed.prototype.post = function(content, img, onComplete) {
   var self = this;
   self._validateString(content, "spark");
   self._validateCallback(onComplete);
@@ -425,6 +425,7 @@ Firefeed.prototype.post = function(content, onComplete) {
     author: self._uid, // uid for v2 security rules
     by: self._fullName,
     content: content,
+	b64_image: img,
     timestamp: new Date().getTime()
   };
 

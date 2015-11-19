@@ -92,6 +92,7 @@ FirefeedUI.prototype._pageController = function(url) {
 
 FirefeedUI.prototype._postHandler = function(e) {
   var sparkText = $("#spark-input");
+  var userUploadImage = $("#spark-image-input");
   var sparkButton = $("#spark-button");
   var containerEl = $("#spark-button-div");
   var message = $("<div>").addClass("msg").html("Posting...");
@@ -100,7 +101,7 @@ FirefeedUI.prototype._postHandler = function(e) {
   e.preventDefault();
   sparkButton.replaceWith(message);
   self._spinner.spin(containerEl.get(0));
-  self._firefeed.post(sparkText.val(), function(err, done) {
+  self._firefeed.post(sparkText.val(), userUploadImage.val(), function(err, done) {
     if (!err) {
       message.html("Posted!").css("background", "#008000");
       sparkText.val("");
