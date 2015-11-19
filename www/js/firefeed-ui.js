@@ -118,6 +118,33 @@ FirefeedUI.prototype._postHandler = function(e) {
   });
 };
 
+FirefeedUI.prototype._commentHandler = function(e) {
+  var commentText = $("#comment-input");
+  var commentButton = $("#comment-button");
+  var containerEl = $("#comment-button-div");
+  var message = $("<div>").addClass("msg").html("Posting...");
+
+  var self = this;
+  e.preventDefault();
+  commentButton.replaceWith(message);
+  self._spinner.spin(containerEl.get(0));
+  self._firefeed.post(sparkText.val(), userUploadImage.val(), function(err, done) {
+    if (!err) {
+      message.html("Posted!").css("background", "#008000");
+      sparkText.val("");
+    } else {
+      message.html("Posting failed!").css("background", "#FF6347");
+    }
+    self._spinner.stop();
+    $("#c-count").val(self._limit);
+    message.css("visibility", "visible");
+    message.fadeOut(1500, function() {
+      message.replaceWith(sparkButton);
+      commentButton.click(self._postHandler.bind(self));
+    });
+  });
+};
+
 FirefeedUI.prototype._handleNewSpark = function(listId, limit, func) {
   var self = this;
   func(
@@ -157,6 +184,9 @@ FirefeedUI.prototype._editableHandler = function(id, value) {
   }
   if (id == "inputBio") {
     this._firefeed.setProfileField("bio", value);
+  }
+  if (id == "inputReputation") {
+    this._firefeed.setProfileField("reputation", value);
   }
   return true;
 };

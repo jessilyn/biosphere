@@ -477,6 +477,73 @@ Firefeed.prototype.post = function(content, img, onComplete) {
   });
 };
 
+Firefeed.prototype.comment = function(spark, content, onComplete) {
+  var self = this;
+  self._validateString(content, "spark");
+  self._validateCallback(onComplete);
+
+  // First, we add the spark to the global sparks list. push() ensures that
+  // we get a unique ID for the spark that is chronologically ordered.
+  var commentRef = spark.child("comments").push();
+  var commentRefId = commentRef.name();
+  var comment = {
+    author: self._uid, // uid for v2 security rules
+    by: self._fullName,
+    content: content,
+    timestamp: new Date().getTime()
+  };
+
+  commentRef.set(spark, function(err) {
+    if (err) {
+      onComplete(new Error("Could not post comment"), false);
+      return;
+    }
+
+//let's skip all this for comments
+/*
+    // Now we add a "reference" to the spark we just pushed, by adding it to
+    // the sparks list for the current user.
+    var feedSparkRef = self._mainUser.child("sparks").child(sparkRefId);
+    feedSparkRef.set(true, function(err) {
+      if (err) {
+        onComplete(new Error("Could not add spark to feed"), false);
+        return;
+      }
+
+      // Then, we add the spark ID to the users own feed.
+      self._mainUser.child("feed").child(sparkRefId).set(true);
+
+      // We also add ourself (with priority) to a list of users with recent
+      // activity which we can use elsewhere to see "active" users.
+      var time = new Date().getTime();
+      var recentUsersRef = self._firebase.child("recent-users");
+
+      recentUsersRef.child(self._uid).setWithPriority(true, time);
+
+      // We'll also add the spark to a separate list of most recent sparks
+      // which can be displayed elsewhere, just like active users above.
+      var recentSparkRef = self._firebase.child("recent-sparks");
+      recentSparkRef.child(sparkRefId).setWithPriority(true, time);
+
+      // Finally, we add the spark ID to the feed of everyone who follows
+      // the current user.
+      self._mainUser.child("followers").once("value", function(followerList) {
+        followerList.forEach(function(follower) {
+          if (!follower.val()) {
+            return;
+          }
+          var childRef = self._firebase.child("users").child(follower.name());
+          childRef.child("feed").child(sparkRefId).set(true);
+        });
+      });
+
+*/
+      // All done!
+      onComplete(false, sparkRefId);
+    });
+  });
+};
+
 /**
  * Get a set of "suggested" users to follow.  For now this is just a list of 5
  * users with recent activity, who you aren't already following.  As the site

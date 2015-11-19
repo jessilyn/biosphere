@@ -105,8 +105,11 @@
               <div class="big-copy end">
                 <div class="editable" id="inputLocation">{{location}}</div>
               </div>
-              <div class="big-copy">
+              <div class="big-copy end">
                 <div class="editable" id="inputBio">{{bio}}</div>
+              </div>
+			  <div class="big-copy">
+                <div class="editable" id="inputReputation">{{reputation}}</div>
               </div>
             </div>
           </div>
@@ -248,6 +251,11 @@
 				{{#keywords}}
     				<p style="font-size:11pt">{{keywords}}</p>
 				{{/keywords}}
+
+				{{#comments}}
+				  <b>{{by}}</b>
+				  {{content}}
+				{{/comments}}
               <p class="meta end">
                 <a class="spark-link" href="?spark={{sparkId}}">{{friendlyTimestamp}}</a>
               </p>
