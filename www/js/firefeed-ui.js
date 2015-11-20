@@ -12,6 +12,8 @@ function FirefeedUI() {
   this._firefeed = new Firefeed("https://luminous-fire-3368.firebaseio.com/");
   this._unload = null;
 
+
+
   // Setup page navigation.
   this._setupHandlers();
 
@@ -25,6 +27,37 @@ function FirefeedUI() {
     self.onLoginStateChange(user);
   });
 }
+
+FirefeedUI.prototype._commentHandle = function(sparkId, commentText) {
+  console.log("hello, my spark Id is");
+console.log(sparkId);
+
+console.log("hello, my comment text is");
+console.log(commentText);
+
+var ff = new Firefeed("https://luminous-fire-3368.firebaseio.com/");
+
+  var self = this;
+  //commentButton.replaceWith(message);
+  //self._spinner.spin(containerEl.get(0));
+  ff.comment(sparkId, commentText, function(err, done) {
+  //self._firefeed.comment(sparkId, commentText.val(), function(err, done) {
+    if (!err) {
+      message.html("Posted!").css("background", "#008000");
+      sparkText.val("");
+    } else {
+      message.html("Posting failed!").css("background", "#FF6347");
+    }
+    //self._spinner.stop();
+    //$("#c-count").val(self._limit);
+    /*message.css("visibility", "visible");
+    message.fadeOut(1500, function() {
+      message.replaceWith(commentButton);
+      commentButton.click(self._commentHandler.bind(self));
+    });*/
+  });
+
+};
 
 FirefeedUI.prototype._setupHandlers = function() {
   var self = this;
@@ -98,6 +131,7 @@ FirefeedUI.prototype._postHandler = function(e) {
   var message = $("<div>").addClass("msg").html("Posting...");
 
   var self = this;
+
   e.preventDefault();
   sparkButton.replaceWith(message);
   self._spinner.spin(containerEl.get(0));
@@ -114,33 +148,6 @@ FirefeedUI.prototype._postHandler = function(e) {
     message.fadeOut(1500, function() {
       message.replaceWith(sparkButton);
       sparkButton.click(self._postHandler.bind(self));
-    });
-  });
-};
-
-FirefeedUI.prototype._commentHandler = function(e) {
-  var commentText = $("#comment-input");
-  var commentButton = $("#comment-button");
-  var containerEl = $("#comment-button-div");
-  var message = $("<div>").addClass("msg").html("Posting...");
-
-  var self = this;
-  e.preventDefault();
-  commentButton.replaceWith(message);
-  self._spinner.spin(containerEl.get(0));
-  self._firefeed.post(sparkText.val(), userUploadImage.val(), function(err, done) {
-    if (!err) {
-      message.html("Posted!").css("background", "#008000");
-      sparkText.val("");
-    } else {
-      message.html("Posting failed!").css("background", "#FF6347");
-    }
-    self._spinner.stop();
-    $("#c-count").val(self._limit);
-    message.css("visibility", "visible");
-    message.fadeOut(1500, function() {
-      message.replaceWith(sparkButton);
-      commentButton.click(self._postHandler.bind(self));
     });
   });
 };
@@ -335,6 +342,9 @@ FirefeedUI.prototype.renderTimeline = function(info) {
 
   // Attach post spark button.
   $("#spark-button").click(self._postHandler.bind(self));
+
+  //move this to mustache template
+  //$("#comment-button").click(self._commentHandler.bind(self));
 
   // Attach new spark event handler, capped to 10 for now.
   self._handleNewSpark(

@@ -227,6 +227,15 @@
         </div>
       </script>
 
+<script>
+
+function postComment(sparkId) {
+
+	var commentbox = document.getElementById("comment-input-" + sparkId);
+	FirefeedUI.prototype._commentHandle(sparkId, commentbox.value);
+}
+      </script>
+
       <script id="tmpl-spark" type="text/html">
         <li id="spark-{{sparkId}}">
           <div class="media">
@@ -253,15 +262,24 @@
 				{{/keywords}}
 
 				{{#comments}}
-				  <b>{{by}}</b>
-				  {{content}}
+					{{comments}}
+						{{#self}}{{c_by}}{{/self}}
+						{{#self}}{{c_content}}{{/self}}
 				{{/comments}}
+				<div class="field">
+					<textarea id="comment-input-{{sparkId}}" class="text" rows="4" cols="10" placeholder="Share a comment"></textarea>
+				  </div>
+				<div id="comment-button-div">
+				    <a id="comment-button" class="btn default full pushv4" onclick="postComment('{{sparkId}}')">Add a comment</a>
+				</div>
               <p class="meta end">
                 <a class="spark-link" href="?spark={{sparkId}}">{{friendlyTimestamp}}</a>
               </p>
             </div>
           </div>
         </li>
+console.log("what what what");
+$("#comment-button").click(self._commentHandler.bind(self));
       </script>
 
       <script id="tmpl-suggested-user" type="text/html">

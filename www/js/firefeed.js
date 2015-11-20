@@ -477,38 +477,43 @@ Firefeed.prototype.post = function(content, img, onComplete) {
   });
 };
 
-Firefeed.prototype.comment = function(spark, content, onComplete) {
+Firefeed.prototype.comment = function(sparkId, content, onComplete) {
   var self = this;
   self._validateString(content, "spark");
   self._validateCallback(onComplete);
+
+var spark = self._firebase.child("sparks").child(sparkId);
+
+console.log("posting comment to spark " + sparkId);
 
   // First, we add the spark to the global sparks list. push() ensures that
   // we get a unique ID for the spark that is chronologically ordered.
   var commentRef = spark.child("comments").push();
   var commentRefId = commentRef.name();
   var comment = {
-    author: self._uid, // uid for v2 security rules
-    by: self._fullName,
-    content: content,
-    timestamp: new Date().getTime()
+    c_author: self._uid, // uid for v2 security rules
+    c_by: self._fullName,
+    c_content: content,
+    c_timestamp: new Date().getTime()
   };
 
-  commentRef.set(spark, function(err) {
+  commentRef.set(comment, function(err) {
     if (err) {
       onComplete(new Error("Could not post comment"), false);
       return;
     }
 
 //let's skip all this for comments
-/*
+
     // Now we add a "reference" to the spark we just pushed, by adding it to
     // the sparks list for the current user.
-    var feedSparkRef = self._mainUser.child("sparks").child(sparkRefId);
+   /* var feedSparkRef = self._mainUser.child("sparks").child(sparkRefId);
     feedSparkRef.set(true, function(err) {
       if (err) {
         onComplete(new Error("Could not add spark to feed"), false);
         return;
       }
+
 
       // Then, we add the spark ID to the users own feed.
       self._mainUser.child("feed").child(sparkRefId).set(true);
@@ -537,10 +542,10 @@ Firefeed.prototype.comment = function(spark, content, onComplete) {
         });
       });
 
-*/
+
       // All done!
       onComplete(false, sparkRefId);
-    });
+    });*/
   });
 };
 
